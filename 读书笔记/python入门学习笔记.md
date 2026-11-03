@@ -2455,7 +2455,7 @@ with open("python.txt", "r") as f:
 
 演示一下，先创建一个文本文件test1
 
-![79360971307](C:\Users\21290\AppData\Local\Temp\1793609713076.png)
+![79360971307](images/python/1793609713076.png)
 
 打开文件并读取10个字节的结果
 
@@ -2941,7 +2941,7 @@ Q：什么是python包？
 
 A：从物理上看，包就是一个文件夹，在该文件夹下包含了一个 `__init__.py`文件，该文件夹可用于包含多个模块文件
 
-![79367362331](image/python/1.png)
+![79367362331](images/python/1.png)
 
 快速入门：
 
@@ -2949,7 +2949,7 @@ A：从物理上看，包就是一个文件夹，在该文件夹下包含了一�
 2. 新建包内模块 my_module1，my_module2
 3. 新建包后，包内部会自动创建 `__init__.py`文件，这个文件控制着包的导入行为
 
-![79367394018](image/python/2.png)
+![79367394018](images/python/2.png)
 
 - 导入包的方式1
 
@@ -3069,19 +3069,19 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple 包名称
 
 1.看最右下角，点击解释器设置
 
-![79367675498](image/python/3.png)
+![79367675498](images/python/3.png)
 
 
 
 2.点击 + 号
 
-![79367683860](image/python/4.png)
+![79367683860](images/python/4.png)
 
 
 
 3.输入你想要导入的包名称，右下角勾选选项，输入国内镜像源提高下载速度
 
-![79367700441](image/python/5.png)
+![79367700441](images/python/5.png)
 
 ### 8.6   综合案例
 
