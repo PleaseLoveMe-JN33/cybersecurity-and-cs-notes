@@ -1,4 +1,4 @@
-# python学习笔记
+# python入门学习笔记
 
 ## 第一章   字面量
 
@@ -2455,7 +2455,7 @@ with open("python.txt", "r") as f:
 
 演示一下，先创建一个文本文件test1
 
-![图片描述](images/python/1793609713076.png)
+![79360971307](C:\Users\21290\AppData\Local\Temp\1793609713076.png)
 
 打开文件并读取10个字节的结果
 
@@ -2624,3 +2624,484 @@ with (open('D:/bill.txt', 'r', encoding='utf-8') as f, open('D:/bill.txt.bak', '
 
 print("备份完成！已过滤测试数据。")
 ```
+
+## 第八章   python异常，模块与包
+
+### 8.1   了解异常
+
+Q：什么是异常？
+
+A：当检测到一个错误时，Python解释器就无法继续执行，出现了一些错误的提示，这就是所谓的异常，也就是我们常说的BUG
+
+> bug单词的诞生
+>
+> 早期计算机采用大量继电器工作，马克二型计算机就是这样的
+>
+> 1945年9月9日，下午三点，马克二型计算机无法正常工作了，技术人员试了很多办法，最后定位到第70号继电器出错，负责人哈珀观察这个出错的继电器，发现一只飞蛾躺在中间，已经被继电器打死，她小心地用镊子将蛾子夹出来，用透明胶布贴到“事件记录本”中，并注明 “ 第一个发现虫子的实例 ”
+>
+> 自此之后，引发软件失效的缺陷，便被称为Bug
+
+### 8.2   异常的捕获方法
+
+Q：为什么要捕获异常？
+
+A：世界上没有完美的程序，任何程序在运行的过程中，都有可能出现异常，我们要做的，不是力求程序完美运行，而是在力所能及的范围内，对可能出现的bug，进行提前准备、提前处理
+
+当我们的程序遇到了BUG，那么接下来有两种情况：
+
+1. 整个程序因为一个BUG停止运行
+2. 对BUG进行提醒，整个程序继续运行
+
+在真实工作中，我们肯定不能因为一个小的BUG就让整个程序全部奔溃，也就是我们希望的是达到2这种情况
+
+捕获异常的作用在于，提前假设某处会出现异常，做好提前准备，当真的出现异常的时候，可以有后续手段
+
+- 基本语法：
+
+```
+try:
+    可能发生错误的代码
+except:
+    如果出现异常执行的代码
+```
+
+- 捕获指定异常：
+
+```
+try:
+    print(name)
+except NameError as e:
+    print('name变量名称未定义错误')
+```
+
+注意事项：
+
+1. 如果尝试执行的代码的异常类型和要捕获的异常类型不一致，则无法捕获异常
+2. 一般try下方只放一行尝试执行的代码
+
+- 捕获多个异常：
+
+```
+try:
+    print(1/0)
+except (NameError, ZeroDivisionError):
+    print('出现了变量未定义 或者 除以0的异常错误')
+```
+
+- 捕获所有异常：
+
+```
+try:
+    f = open("D:/123.txt", "r")
+except Exception as e:
+    print("出现异常了")
+```
+
+**图省事可以把Exception as e删掉**
+
+- 异常的else：
+
+```
+try:
+    print(1)
+except Exception as e:
+    print(e)
+else:
+    print('我是else，是没有异常的时候执行的代码')
+```
+
+- 异常的finally
+
+finally表示的是无论是否异常都要执行的代码，例如关闭文件
+
+```
+try:
+    f = open('test.txt', 'r')
+except Exception as e:
+    f = open('test.txt', 'w')
+else:
+    print('没有异常，真开心')
+finally:
+    f.close()
+```
+
+### 8.3   异常的传递
+
+```
+def func01():  # 异常在func01中没有被捕获
+    print("这是func01开始")
+    num = 1 / 0
+    print("这是func01结束")
+
+def func02():  # 异常在func02中没有被捕获
+    print("这是func02开始")
+    func01()
+    print("这是func02结束")
+
+def main():  # 异常在mian中被捕获
+    try:
+        func02()
+    except Exception as e:
+        print(e)
+
+main()
+
+# 编译结果
+这是func02开始
+这是func01开始
+division by zero
+```
+
+上图的示例说明了，**异常是具有传递性的**
+
+当函数func01中发生异常，并且没有捕获处理这个异常的时候，异常会传递到函数func02，当func02也没有捕获处理这个异常的时候main函数会捕获这个异常， 这就是异常的传递性
+
+### 8.4   python的模块
+
+#### 8.4.1   模块的导入
+
+Q：什么是模块？
+
+A：python模块（module），是一个 Python 文件，以 **.py** 结尾，模块能定义函数，类和变量，模块里也能包含可执行的代码
+
+Q：模块的作用？
+
+A： python中有很多各种不同的模块，每一个模块都可以帮助我们快速的实现一些功能，比如实现和时间相关的功能就可以使用time模块，我们可以认为一个模块就是一个工具包，每一个工具包中都有各种不同的工具供我们使用进而实现各种不同的功能
+
+模块的导入方式：
+
+```
+[from 模块名] import [模块 | 类 | 变量 | 函数 | *] [as 别名]
+```
+
+常用的组合形式如：
+
+```
+import 模块名
+from 模块名 import 类、变量、方法等
+from 模块名 import *
+import 模块名 as 别名
+from 模块名 import 功能名 as 别名
+```
+
+- import 模块名
+
+```
+import 模块名
+import 模块名1，模块名2
+
+模块名.功能名()
+```
+
+```
+# 导入时间模块
+import time
+
+print("开始")
+# 让程序睡眠5秒(阻塞)
+time.sleep(5)
+print("结束")
+```
+
+- from 模块名 import 功能名
+
+```
+from 模块名 import 功能名
+功能名()
+```
+
+```
+# 导入时间模块中的sleep方法
+from time import sleep
+
+print("开始")
+# 让程序睡眠5秒(阻塞)
+sleep(5)
+print("结束")
+```
+
+- from 模块名 import *
+
+```
+from 模块名 import *
+功能名()
+```
+
+```
+# 导入时间模块中所有的方法
+from time import *
+
+print("开始")
+# 让程序睡眠5秒(阻塞)
+sleep(5)
+print("结束")
+```
+
+- as定义别名
+
+```
+# 模块定义别名
+import 模块名 as 别名
+
+# 功能定义别名
+from 模块名 import 功能 as 别名
+```
+
+```
+# 模块别名
+import time as tt
+
+tt.sleep(2)
+print('hello')
+
+
+# 功能别名
+from time import sleep as sl
+sl(2)
+print('hello')
+```
+
+#### 8.4.2   自定义模块
+
+Q：为什么要制作自定义模块？
+
+A：Python中已经帮我们实现了很多的模块，不过有时候我们需要一些个性化的模块，这里就可以通过自定义模块实现，也就是自己制作一个模块
+
+ **每个Python文件都可以作为一个模块，模块名必须符合标识符命名规则**
+
+- 导入不同模块的同名功能
+
+比如你自己写了两个模块，module1和module2，这两个模块里都有一个test函数，module1里的test函数执行了两数相加，module2则相反，那么当你调用test函数时，到底是执行module1里的还是module2里的？
+
+```
+from my_module1 import my_test
+from my_module2 import my_test
+
+# 结论
+module2会覆盖掉module1，后来者居上
+```
+
+- 测试模块
+
+在实际开发中，当一个开发人员编写完一个模块后，为了让模块能够在项目中达到想要的效果，这个开发人员会自行在py文件中添加一些测试信息，如下所示：
+
+```
+def test(a,b):
+    print(a+b)
+
+test(1, 1)
+```
+
+但问题是，无论是当前文件，还是其他已经导入了该模块的文件，在运行的时候都会自动执行测试语句，会引起不必要的混乱
+
+解决方案：
+
+```
+def test(a,b):
+    print(a+b)
+
+# 只在当前文件中调用该函数
+if __name__ == '__main__':
+    test(1, 1)
+```
+
+- 关于`__all__`
+
+```
+如果一个模块文件中有__all__变量，当使用from xxx import *导入时，只能导入这个列表中的元素
+```
+
+如下所示：
+
+```
+__all__ = ['test_A']
+
+def test_A():
+    print('testA')
+
+def test_B():
+    print('testB')
+```
+
+```
+test_B()会直接报错
+```
+
+### 8.5   python包
+
+#### 8.5.1   自定义包
+
+基于Python模块，我们可以在编写代码的时候，导入许多外部代码来丰富功能
+
+但是，如果Python的模块太多了，就可能造成一定的混乱，那么如何管理呢？
+
+当然是用python包啦
+
+Q：什么是python包？
+
+A：从物理上看，包就是一个文件夹，在该文件夹下包含了一个 `__init__.py`文件，该文件夹可用于包含多个模块文件
+
+![79367362331](image/python/1.png)
+
+快速入门：
+
+1. 新建包 my_package
+2. 新建包内模块 my_module1，my_module2
+3. 新建包后，包内部会自动创建 `__init__.py`文件，这个文件控制着包的导入行为
+
+![79367394018](image/python/2.png)
+
+- 导入包的方式1
+
+```
+import 包名.模块名
+
+包名.模块名.目标
+```
+
+```
+import my_package.my_module1
+import my_package.my_module2
+
+my_package.my_module1.info_print1()
+my_package.my_module2.info_print2()
+```
+
+- 导入包的方式2
+
+```
+from 包名 import 模块名
+
+模块名.目标
+```
+
+```
+from my_package import my_module1
+from my_package import my_module2
+
+my_module1.info_print1()
+my_module2.info_print2()
+```
+
+- 导入包的方式3
+
+```
+from 包名.模块名 import 目标
+
+目标
+```
+
+```
+from my_package.my_module1 import info_print1
+from my_package.my_module2 import info_print2
+
+info_print1()
+info_print2()
+```
+
+- 导入包的方式4
+
+注意：必须在 `__init.py__` 文件中添加 `__all__ = []` ，控制允许导入的模块列表
+
+```
+from 包名 import *
+
+模块名.目标
+```
+
+`__init.py__` 文件中如下所示：
+
+```
+__all__ = ["my_module2"]
+```
+
+调用包：
+
+```
+from my_package import *
+
+my_module1.info_print1()   # 会直接报错
+
+my_module2.info_print2()
+```
+
+#### 8.5.2   安装第三方包
+
+Q：什么是第三方包？
+
+A：非Python官方的包，可以极大的帮助我们提高开发效率
+
+比如：
+
+- 科学计算中常用的：numpy包
+- 数据分析中常用的：pandas包
+- 大数据计算中常用的：pyspark、apache-flink包
+- 图形可视化常用的：matplotlib、pyecharts
+- 人工智能常用的：tensorflow
+
+这些第三方的包，极大的丰富了Python的生态，提高了开发效率
+
+
+
+- 安装第三方包方法：pip
+
+第三方包的安装非常简单，我们只需要使用Python内置的pip程序即可
+
+打开命令提示符程序，在里面输入：
+
+```
+pip install 包名称
+```
+
+- pip的网络优化
+
+由于pip是连接的国外的网站进行包的下载，所以有的时候会速度很慢
+
+我们可以通过如下命令，让其连接国内的网站进行包的安装：
+
+```
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple 包名称
+```
+
+`https://pypi.tuna.tsinghua.edu.cn/simple` 是清华大学提供的一个网站，可供pip程序下载第三方包
+
+- pycharm安装第三方包
+
+1.看最右下角，点击解释器设置
+
+![79367675498](image/python/3.png)
+
+
+
+2.点击 + 号
+
+![79367683860](image/python/4.png)
+
+
+
+3.输入你想要导入的包名称，右下角勾选选项，输入国内镜像源提高下载速度
+
+![79367700441](image/python/5.png)
+
+### 8.6   综合案例
+
+自定义工具包
+
+创建一个自定义包，名称为：my_utils (我的工具)，在包内提供2个模块
+
+- str_util.py（字符串相关工具）
+
+函数：str_reverse(s)，接受传入字符串，将字符串反转返回
+
+函数：substr(s，x，y)，按照下标x和y，对字符串进行切片
+
+- file_util.py（文件处理相关工具）
+
+函数：print_file_info(file_name)，接收传入文件的路径，打印文件的全部内容，如文件不存在则捕获异常，输出提示信息，通过finally关闭文件对象
+
+函数：append_to_file(file_name, data)，接收文件路径以及传入数据，将数据追加写入到文件中
+
+构建出包后，尝试着用一用自己编写的工具包
+
+
+
