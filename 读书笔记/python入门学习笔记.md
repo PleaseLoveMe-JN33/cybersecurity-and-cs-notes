@@ -949,7 +949,7 @@ print(c)
 
 Q：如果函数没有用返回值return，那么函数有返回值吗？
 
-A：**有的**，python中**特殊的字面量：None**，其类型是**<class 'NoneType'>**，无返回值的函数返回的是None这个字面量
+A：**有的**，python中**特殊的字面量：None**，其类型是 ` <class 'NoneType'> `，无返回值的函数返回的是None这个字面量
 
 **用处在哪呢？**
 
@@ -2455,8 +2455,6 @@ with open("python.txt", "r") as f:
 
 演示一下，先创建一个文本文件test1
 
-![79360971307](images/python/1793609713076.png)
-
 打开文件并读取10个字节的结果
 
 ```
@@ -2941,15 +2939,11 @@ Q：什么是python包？
 
 A：从物理上看，包就是一个文件夹，在该文件夹下包含了一个 `__init__.py`文件，该文件夹可用于包含多个模块文件
 
-![79367362331](images/python/1.png)
-
 快速入门：
 
 1. 新建包 my_package
 2. 新建包内模块 my_module1，my_module2
 3. 新建包后，包内部会自动创建 `__init__.py`文件，这个文件控制着包的导入行为
-
-![79367394018](images/python/2.png)
 
 - 导入包的方式1
 
@@ -3065,24 +3059,6 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple 包名称
 
 `https://pypi.tuna.tsinghua.edu.cn/simple` 是清华大学提供的一个网站，可供pip程序下载第三方包
 
-- pycharm安装第三方包
-
-1.看最右下角，点击解释器设置
-
-![79367675498](images/python/3.png)
-
-
-
-2.点击 + 号
-
-![79367683860](images/python/4.png)
-
-
-
-3.输入你想要导入的包名称，右下角勾选选项，输入国内镜像源提高下载速度
-
-![79367700441](images/python/5.png)
-
 ### 8.6   综合案例
 
 自定义工具包
@@ -3102,6 +3078,333 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple 包名称
 函数：append_to_file(file_name, data)，接收文件路径以及传入数据，将数据追加写入到文件中
 
 构建出包后，尝试着用一用自己编写的工具包
+
+### 8.7   json数据格式
+
+Q：什么是json？
+
+A：JSON是一种轻量级的数据交互格式，可以按照JSON指定的格式去组织和封装数据，本质上是一个带有特定格式的字符串
+
+主要功能是，负责不同编程语言中的数据传递和交互
+
+基本格式：
+
+```
+# json数据的格式可以是：
+{"name":"admin","age":18}
+
+# 也可以是：
+[{"name":"admin","age":18},{"name":"root","age":16},{"name":"张三","age":20}]
+```
+
+Python数据和Json数据的相互转化：
+
+```
+import json
+
+# 准备符合格式json格式要求的python数据
+data = [{"name": "老王", "age": 16}, {"name": "张三", "age": 20}]
+
+# 通过 json.dumps(data) 方法把python数据转化为了 json数据
+data = json.dumps(data)
+
+# 通过 json.loads(data) 方法把json数据转化为了 python数据 
+data = json.loads(data)
+```
+
+当数据中有中文的情况下：
+
+```
+data = json.dumps(data, ensure_ascii = False)
+
+```
+
+## 第九章   面向对象
+
+### 9.1   初识对象
+
+使用对象组织数据
+
+- 在程序中设计表格，我们称之为：设计类（class）
+
+```
+class Student:
+    name = None              # 记录学生姓名
+```
+
+- 在程序中打印生产表格，我们称之为：创建对象
+
+```
+# 基于类创建对象
+stu_1 = Student()
+stu_2 = Student()
+```
+
+- 在程序中填写表格，我们称之为：对象属性赋值
+
+```
+stu_1.name = "周杰轮"        # 为学生1对象赋予名称属性值
+stu_2.name = "林军杰"        # 为学生2对象赋予名称属性值
+```
+
+### 9.2   成员方法
+
+- 类的定义和使用方法
+
+在上一节中，我们简单了解到可以使用类去封装属性，并基于类创建出一个个的对象来使用
+
+现在我们来看看类的使用语法：
+
+```
+class 类名称:
+    类的属性   # 类的属性，即定义在类中的变量（成员变量）
+    
+    类的行为   # 类的行为，即定义在类中的函数（成员方法）
+```
+
+创建对象的语法：
+
+```
+对象 = 类名称()
+```
+
+成员方法的定义语法：
+
+```
+def 方法名(self, 形参1, ......, 形参N):
+    方法体
+```
+
+在方法定义的参数列表中，有一个：**self关键字**，必须填写的
+
+- 表示类对象自身的意思
+
+### 9.3   类和对象
+
+类只是一种程序内的**设计图纸**，需要基于图纸生产**实体**（对象），才能正常工作
+
+这种套路称之为面向对象编程
+
+- 使用构造方法向成员变量赋值
+
+python类可以使用 ` __init__() `方法，称之为构造方法
+
+```
+class a:
+    def __init__(self, name, age, height):
+        self.name = name
+        self.age = age
+        self.height = height
+b = a("Bob", 45, 78)
+print(b.name)
+print(b.age)
+print(b.height)
+
+Bob
+45
+78
+```
+
+练习：
+
+请设计一个类，记录学生的姓名、年龄、地址，这3类信息
+
+- 请实现通过for循环，配合input输入语句，并使用构造方法，完成学生信息的键盘录入
+- 输入完成后，使用print语句，完成信息的输出
+
+```
+当前录入第1位学生信息，总共需录入10位学生信息
+请输入学生姓名：周杰轮
+请输入学生年龄：31
+请输入学生地址：北京
+学生1信息录入完成，信息为：【学生姓名：周杰轮，年龄：31，地址：北京】
+当前录入第2位学生信息，总共需录入10位学生信息
+请输入学生姓名：
+```
+
+**不用构造方法可以这么写**
+
+```
+class Student:
+        name = None
+        age = None
+        location = None
+for i in range(1, 11):
+    print(f'当前录入第{i}位学生信息，总共需录入10位学生信息')
+    stu = Student()
+    stu.name = input('请输入学生姓名：')
+    stu.age = input('请输入学生年龄：')
+    stu.location = input('请输入学生地址：')
+    print(f'学生{i}信息录入完成，信息为：【学生姓名：{stu.name}，年龄：{stu.age}，地址：{stu.location}】')
+    
+    
+当前录入第1位学生信息，总共需录入10位学生信息
+请输入学生姓名：john
+请输入学生年龄：10
+请输入学生地址：peiking
+学生1信息录入完成，信息为：【学生姓名：john，年龄：10，地址：peiking】
+当前录入第2位学生信息，总共需录入10位学生信息
+```
+
+**用构造方法**
+
+```
+class Student:
+    def __init__(self, name, age, location):
+        self.name = name
+        self.age = age
+        self.location = location
+for i in range(1, 11):
+    print(f'当前录入第{i}位学生信息，总共需录入10位学生信息')
+    stu_name = input('请输入学生姓名：')
+    stu_age = input('请输入学生年龄：')
+    stu_location = input('请输入学生地址：')
+    stu = Student(stu_name, stu_age, stu_location)
+    print(f'学生{i}信息录入完成，信息为：【学生姓名：{stu.name}，年龄：{stu.age}，地址：{stu.location}】')
+```
+
+### 9.4   其他内置方法
+
+上文中的 ` __init__() `方法，是Python类内置的方法之一
+
+这些内置的类方法，各自有各自特殊的功能，这些内置方法我们称之为：**魔术方法**
+
+- ` __str__`方法
+
+示例代码：
+
+```
+class Student:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+student = Student("周杰轮", 11)
+print(student)          
+print(str(student)) 
+```
+
+结果输出：
+
+```
+<__main__.Student object at 0x00000274EB8E17F0>
+<__main__.Student object at 0x00000274EB8E17F0>
+```
+
+当类对象需要被转换为字符串之时，会输出如上结果（内存地址）
+
+内存地址没有多大作用，我们可以通过` __str__`方法，控制类转换为字符串的行为
+
+```
+class Student:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __str__(self):
+        return f"Student类对象，name={self.name}，age={self.age}"
+
+student = Student("周杰轮", 11)
+print(student)         
+print(str(student))    
+```
+
+结果输出：
+
+```
+Student类对象，name=周杰轮，age=11
+Student类对象，name=周杰轮，age=11
+```
+
+- ` __lt__`方法
+
+直接对2个对象进行比较是不可以的，但是在类中实现`__lt__`方法，即可同时完成 **<** 和 **>** 的两种比较
+
+```
+class student:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __lt__(self, other):
+        return self.age < other.age
+
+stu1 = student("周杰轮", 11)
+stu2 = student("林军杰", 13)
+print(stu1 < stu2)      # 结果：True
+print(stu1 > stu2)      # 结果：False
+```
+
+- ` __le__`方法
+
+`__le__`方法可同时完成 **<** =和 **>** =的两种比较
+
+- ` __eq__ `方法
+
+`__eq__`方法，可同时 **==** 的比较
+
+### 9.5   封装
+
+封装表示的是，将现实世界事物的
+
+- 属性
+- 行为
+
+封装到类中，描述为
+
+- 成员变量
+- 成员方法
+
+从而完成程序对现实世界事物的描述
+
+**私有成员变量和私有成员方法**
+
+定义方式很简单：
+
+- 私有成员变量：变量名以 ` __`开头（2个下划线）
+- 私有成员方法：方法名以 ` __` 开头（2个下划线）
+
+**私有成员无法被类对象使用**
+
+**但是，私有成员能被其他内部成员使用**
+
+示例如下：
+
+```
+class Phone:
+    __current_voltage = 0.5          # 当前手机运行电压
+
+    def __keep_single_core(self):
+        print("让CPU以单核模式运行")
+
+    def call_by_5g(self):
+        if self.__current_voltage >= 1:
+            print("5g通话已开启")
+        else:
+            self.__keep_single_core()
+            print("电量不足，无法使用5g通话，并已设置为单核运行进行省电。")
+```
+
+```
+class Phone:
+    __current_voltage = 1          # 当前手机运行电压
+
+    def __keep_single_core(self):
+        print("让CPU以单核模式运行")
+
+    def call_by_5g(self):
+        if self.__current_voltage >= 1:
+            print("5g通话已开启")
+        else:
+            self.__keep_single_core()
+            print("电量不足，无法使用5g通话，并已设置为单核运行进行省电。")
+phone = Phone()
+phone.call_by_5g()
+
+
+# 编译结果
+5g通话已开启
+```
 
 
 
