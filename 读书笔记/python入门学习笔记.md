@@ -3261,7 +3261,28 @@ for i in range(1, 11):
     stu_location = input('请输入学生地址：')
     stu = Student(stu_name, stu_age, stu_location)
     print(f'学生{i}信息录入完成，信息为：【学生姓名：{stu.name}，年龄：{stu.age}，地址：{stu.location}】')
+
 ```
+
+**2026/11/9 再做练习题时写出新的代码，也可以正确运行**
+
+```
+class Student:
+    def __init__(self, name, age, location):
+        self.name = name
+        self.age = age
+        self.location = location
+        print(f'学生{i}信息录入完成，信息为：【学生姓名：{self.name}，年龄：{self.age}，地址：{self.location}】')
+for i in range(1, 11):
+    print(f'当前录入第{i}位学生信息，总共需录入10位学生信息')
+    student = Student(
+        input('请输入学生姓名：'),
+        input('请输入学生年龄：'),
+        input('请输入学生地址：')
+    )
+```
+
+
 
 ### 9.4   其他内置方法
 
@@ -3406,5 +3427,365 @@ phone.call_by_5g()
 5g通话已开启
 ```
 
+设计一个手机类，内部包含：
 
+私有成员变量：__is_5g_enable，类型bool，True表示开启5g，False表示关闭5g
+
+私有成员方法：__check_5g()，会判断私有成员is_5g_enable的值
+
+若为True，打印输出：5g开启
+
+若为False，打印输出：5g关闭，使用4g网络
+
+公开成员方法：call_by_5g()，调用它会执行
+
+调用私有成员方法：__check_5g()，判断5g网络状态
+
+打印输出：正在通话中
+
+运行结果：
+
+```
+5g关闭，使用4g网络
+正在通话中
+```
+
+```
+class Phone:
+    # 1. 私有成员变量
+    __is_5g_enable = False  # 题目要求运行结果是关闭，所以这里初始值设为 False
+
+    # 2. 私有成员方法（注意缩进，和 call_by_5g 平级）
+    def __check_5g(self):
+        if self.__is_5g_enable == True:
+            print('5g开启')
+        else:
+            print('5g关闭，使用4g网络')
+
+    # 3. 公开成员方法
+    def call_by_5g(self):
+        # 调用内部私有方法
+        self.__check_5g()
+        # 无论 5G 状态如何，通话都要继续，所以这行不缩进在 if/else 里面
+        print('正在通话中')
+
+
+# 4. 创建对象并调用方法
+p = Phone()
+p.call_by_5g()
+```
+
+### 9.6   继承
+
+```
+class 类名(父类名):
+    类内容体
+```
+
+继承分为：单继承和多继承
+
+举例来看，父类：
+
+```
+class Phone:
+	num = None
+	company = 'Apple'
+	def call(self):
+		print('4G')
+```
+
+子类：
+
+```
+class Phone2(Phone):
+	a = 'face id'
+	def call2(self):
+		print('5G')
+```
+
+- 多继承
+
+```
+class 类名(父类1, 父类2, 父类3)
+```
+
+**多继承中，如果父类有同名的方法或者属性，先继承的优先级大于后继承**
+
+pass关键字，一个普通的占位语句
+
+- 复写
+
+子类继承父类的成员属性和成员方法后，如果对其不满意，那么可以进行复写，即在子类中重新定义同名的属性或方法即可
+
+```
+class Phone:
+    IMEI = None              # 序列号
+    producer = "ITCAST"      # 厂商
+
+    def call_by_5g(self):
+        print("父类的5g通话")
+
+class MyPhone(Phone):
+    procer = "ITHEIMA"       # 复写父类属性
+
+    def call_by_5g(self):    # 复写父类方法
+        print("子类的5g通话")
+```
+
+一旦复写父类成员，那么类对象调用成员的时候，就会调用复写后的新成员，如果需要使用被复写的父类的成员，需要特殊的调用方式
+
+- 调用父类成员
+
+```
+使用成员变量：父类名.成员变量
+使用成员方法：父类名.成员方法(self)
+```
+
+- 使用super()调用父类成员
+
+```
+使用成员变量：super().成员变量
+使用成员方法：super().成员方法()
+
+
+```
+
+**示例**
+
+```
+class Phone:
+    producer = "ITCAST"
+
+    def call_by_5g(self):
+        print("父类的5g通话")
+
+class MyPhone(Phone):
+    producer = "ITHEIMA"   # 注意拼写，这才是复写
+
+    def call_by_5g(self):
+        print("子类的5g通话")
+
+    def show_parent_producer(self):
+        print(super().producer)   # 方法内部才能用 super()
+
+phone = MyPhone()
+print(phone.producer)              # ITHEIMA
+phone.show_parent_producer()       # ITCAST
+```
+
+### 9.7   类型注解
+
+#### 9.7.1   变量类型注解
+
+Python在3.5版本的时候引入了类型注解，以方便静态类型检查工具，IDE等第三方工具
+
+**类型注解：在代码中涉及数据交互的地方，提供数据类型的注解（显式的说明）**
+
+主要功能：
+
+- 帮助第三方IDE工具（如PyCharm）对代码进行类型推断，协助做代码提示
+- 帮助开发者自身对变量进行类型注释
+- 支持变量的类型注解
+- 支持函数（方法）形参列表和返回值的类型注解
+
+
+基础容器
+
+```
+my_list: list = [1, 2, 3]
+my_tuple: tuple = (1, 2, 3)
+my_set: set = {1, 2, 3}
+my_dict: dict = {"itheima": 666}
+my_str: str = "itheima"
+```
+
+容器类型详细注解
+
+```
+my_list: list[int] = [1, 2, 3]
+my_tuple: tuple[str, int, bool] = ("itheima", 666, True)
+my_set: set[int] = {1, 2, 3}
+my_dict: dict[str, int] = {"itheima": 666}
+```
+
+注意：
+
+- 元组类型设置类型详细注解，**需要将每一个元素都标记出来**
+- 字典类型设置类型详细注解，需要2个类型，第一个是key，第二个是value
+
+>  我更建议使用在注释中进行类型注解，看起来更美观
+
+注释中进行类型注解：
+
+```
+class Student:
+	pass
+var_1 = random.randint(1, 10)   # type: int
+var_2 = json.loads(data)   # type: dict[str, int]
+var_3 = func()   # type: Student
+```
+
+> 一般无法直接看出变量类型的时候再添加类型注解
+
+#### 9.7.2   函数（方法）的类型注解
+
+```
+def fuc(data):
+	data.app
+```
+
+如上所示：
+
+- 在编写函数（方法），使用形参data的时候，工具没有任何提示
+- 在调用函数（方法），传入参数的时候，工具无法提示参数类型
+
+这些都是因为，我们在定义函数（方法）的时候，没有给形参进行注解
+
+函数和方法的形参类型注解语法：
+
+```
+def 函数方法名(形参名: 类型, 形参名: 类型,.......):
+    pass
+```
+
+同时，函数（方法）的返回值也是可以添加类型注解的
+
+```
+def 函数方法名(形参: 类型,......., 形参: 类型) -> 返回值类型:
+    pass
+```
+
+#### 9.7.3   Union类型
+
+```
+my_list = [1, 2, "itcast", "itheima"]
+my_dict ={"name": "周杰轮", "age": 31}
+```
+
+> 遇到如上情况你怎么办？常规的类型注释能应付两个不同的数据类型杂糅到一起吗？
+
+这个时候我们就可以使用union
+
+```
+my_list: list[Union[int, str]] = [1, 2, "itcast", "itheima"]
+
+my_dict: dict[str, Union[str, int]] ={"name": "周杰轮", "age": 31}
+
+def func(data: Union[int, str]) -> Union[int, str]:
+    pass
+```
+
+**切记一定要在开头引用from typing import Union**
+
+### 9.8   多态
+
+多态，指的是：多种状态，即完成某个行为时，使用不同的对象会得到不同的状态
+
+```
+class Animal:
+    def speak(self):
+        pass
+
+class Dog(Animal):
+    def speak(self):
+        print("汪汪汪")
+
+class Cat(Animal):
+    def speak(self):
+        print("喵喵喵")
+        
+def make_noise(animal: Animal):
+    animal.speak()
+
+dog = Dog()
+cat = cat()
+
+make_noise(dog)       # 输出：汪汪汪
+make_noise(cat)       # 输出：喵喵喵
+```
+
+**重点是思路，同一种行为（动物叫声），传入不同的对象（动物种类），产生的结果也不一样**
+
+**多态常运用在继承上**
+
+- 父类
+- 子类复写父类的成员方法
+- 定义新的函数传入父类对象（实则传入子类对象）
+
+**抽象类又是一个什么玩意？**
+
+来看一下父类定义的成员方法：
+
+```
+class Animal:
+    def speak(self):
+        pass
+```
+
+**这是个空实现**，这种设计的含义是，让父类确定有哪些方法，具体方法实现让子类来定义
+
+这种写法就叫**抽象类（也可以称之为接口）**
+
+### 9.9   综合案例
+
+某公司，两份数据文件：
+
+2011年1月销售数据.txt 和 2011年2月销售数据.txt
+
+需要你计算每日销售额并以柱状图的形式展示
+
+- 1月份数据是普通文本，使用逗号分割数据记录，从前到后分别是（日期，订单id，销售额，销售省份）
+
+```
+2011-01-01,4b34218c-9f37-4e66-b33e-327ecd5fb897,1689,湖南省
+2011-01-01,5b6a6417-9a16-4243-9704-255719074bff,2353,河北省
+2011-01-01,ae240260-68a9-4e59-b4c9-206be4c08a8d,2565,湖北省
+2011-01-01,c833e851-880f-4e05-9de5-b547f5ffc5e1,2877,山东省
+2011-01-01,dd27e822-884c-4d20-a309-986f6a90e2b9,947,安徽省
+2011-01-01,8e43e3c5-44bf-4219-8a59-f512607aeefe,815,河北省
+2011-01-01,b6882f5f-fb10-4210-9e45-288dd2239594,1363,广东省
+2011-01-01,fd5056a8-8223-4d02-9988-04e1b41a57e8,2149,江苏省
+2011-01-01,d022df35-3c0e-4753-bccb-37e125a5922b,1739,福建省
+2011-01-01,a480686a-77ff-497e-9e32-0f6d9ba3eadd,2999,江苏省
+```
+
+- 2月份数据是JSON数据，同样包含（日期，订单id，销售额，销售省份）
+
+```
+{"date": "2011-02-01", "order_id": "caf99222-53d6-427b-925d-3187fc71a86a", "money": 1805, "province": "江西省"}
+{"date": "2011-02-01", "order_id": "3dea6f83-a9b2-4197-ba9f-2b25704c530b", "money": 2547, "province": "广东省"}
+{"date": "2011-02-01", "order_id": "93cf7a56-3f90-4df9-af76-de7233c1dddb", "money": 1216, "province": "福建省"}
+{"date": "2011-02-01", "order_id": "0042323a-e555-4d64-a70b-81380ca3aae7", "money": 1193, "province": "四川省"}
+{"date": "2011-02-01", "order_id": "0fbe1745-ac65-48f4-985b-b71875fcfbf7", "money": 230, "province": "云南省"}
+{"date": "2011-02-01", "order_id": "6ee5af28-f6ce-42e3-96b6-96f3844c5fda", "money": 2770, "province": "江西省"}
+{"date": "2011-02-01", "order_id": "2f629b33-62a5-44c1-8a0f-b983e811fb40", "money": 2291, "province": "福建省"}
+{"date": "2011-02-01", "order_id": "773d1259-f81d-413d-81cb-b5f7c0d8f97c", "money": 2453, "province": "河南省"}
+{"date": "2011-02-01", "order_id": "2eda7fc0-f3e8-4064-8427-b674c381cb80", "money": 2267, "province": "江苏省"}
+{"date": "2011-02-01", "order_id": "41d9f2ca-88b8-4bd7-b64b-c5cd9ba54186", "money": 2321, "province": "贵州省"}
+```
+
+#### 9.9.1   使用面向对象思想完成数据读取和处理
+
+#### 9.9.2   基于面向对象思想重新认知第三方库使用
+
+## 第十章   SQL入门和实战
+
+### 10.1   数据库介绍
+
+把数据这个概念分为两类：
+
+- 数据的存储（TXT，EXCEL，数据库）
+- 数据的计算（编程语言可以归纳为，数据的计算一类）
+
+数据库是怎样存储数据的呢？
+
+假如我们现在是某个大学的招生办主任，我们需要负责记录今年入学学生的名单，并进行寝室分配
+
+- 创建一个今年新生的数据库
+- 创建两个表，一个表叫新生报名登记表，一个表叫寝室分配表
+- 两个表都填写相对应的数据信息，比如学号，姓名，生日，籍贯，专业等
+
+发现没有，出现了三个不同层级，分别是，**库 -> 表 -> 数据**
+
+**使用数据库软件去获得库->表->数据，这种数据组织、存储的能力，并借助SQL语言，完成对数据的增删改查等操作**
 
