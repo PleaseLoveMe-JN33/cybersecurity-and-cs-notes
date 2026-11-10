@@ -3789,3 +3789,54 @@ class Animal:
 
 **使用数据库软件去获得库->表->数据，这种数据组织、存储的能力，并借助SQL语言，完成对数据的增删改查等操作**
 
+### 10.2   MySQL的入门使用
+
+命令提示符程序：` mysql -uroot -p`
+
+在MySQL的命令行环境下，可以通过：
+
+```
+show databases;    #查看有哪些数据库
+use 数据库名   #使用某个数据库 
+show tables   #查看数据库内有哪些表
+exit   #退出MySQL命令行环境
+```
+
+**使用图形化工具操作MySQL**
+
+使用命令提示符进行MySQL的操作，不是太方便，一般开发者都会使用第三方的图形化工具进行使用
+
+使用跨平台、开源、免费的图形化工具：DBeaver
+
+下载地址：<https://dbeaver.io/download>
+
+### 10.3   SQL基础和DDL
+
+SQL全称是Structured Query Language，结构化查询语言，用于访问和处理数据库的标准的计算机语言，1974年由Boyce和Chamberlin提出，几乎市面上所有的数据库系统都支持使用SQL语言来操作
+
+**SQL语言的分类**
+
+由于数据库管理系统（数据库软件）功能非常多，不仅仅是存储数据，还要包含：数据的管理、表的管理、库的管理、账户管理、权限管理等等
+
+所以，操作数据库的SQL语言，也基于功能，可以划分为4类：
+
+- 数据定义：DDL（Data Definition Language）
+
+> 库的创建删除、表的创建删除等
+
+- 数据操纵：DCL（Data Control Language）
+
+> 新增数据、删除数据、修改数据等
+
+- 数据控制：DCL（Data Control Language）
+
+> 新增用户、删除用户、密码修改、权限管理等
+
+- 数据查询：DQL（Data Query Language）
+
+> 基于需求查询和计算数据
+
+
+
+
+
