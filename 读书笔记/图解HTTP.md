@@ -325,6 +325,56 @@ http://user:pass@www.example.jp:80/dir/index.htm?uid=1#ch1
 
 RFC（Request for Comments，征求修正意见书）
 
+## 第二章   简单的HTTP协议
+
+### 2.1   HTTP协议用于客户端和服务器端之间的通信
+
+请求访问文本或图像等资源的一端称之为**客户端**
+
+提供资源响应的一端称之为**服务器端**
+
+来看具体实例：
+
+```
+#发送请求
+GET /index.htm HTTP/1.1
+Host: hacker.jp
+
+#发送响应
+HTTP/1.1 200 OK
+Date: Tue, 10 Jul 2012 06:50:15 GMT
+Content-Length: 362
+Content-Type: text/html
+<html>
+...
+```
+
+请求报文：
+
+起始行GET表示**请求访问服务器的类型，称之为方法**
+
+随后的字符串/index.htm指明了**访问的资源对象**，也叫**请求URL**
+
+最后的HTTP/1.1是HTTP的版本号，用来提示客户端使用的HTTP协议功能
+
+综合来看，这段请求的意思是：请求某台HTTP服务器上的/index.htm页面资源
+
+
+
+返回报文：
+
+起始行开头的HTTP/1.1表示服务器对应的HTTP版本
+
+200 OK对应请求的处理结果的状态码和原因短语
+
+下一行显示了创建响应的时间，是首部字段的一个属性
+
+
+
+**HTTP是不保存状态的协议**
+
+HTTP是一种无状态协议，自身不对请求和响应之间的通信状态进行保存，不做持久化处理
+
 
 
 
