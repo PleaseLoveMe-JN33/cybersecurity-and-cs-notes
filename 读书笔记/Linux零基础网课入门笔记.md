@@ -247,7 +247,6 @@ ls /mnt/mytest
 
 你会发现刚刚创建的文件消失了，原因是 tmpfs 是临时文件系统，卸载后它所承载的数据不会继续保留
 
-
 其中查看挂载信息时，返回的参数：
 
 - TARGET：挂载点的路径
@@ -298,7 +297,6 @@ MAC机制的工作原理如下：
 **安全上下文（Security Context）是MAC里最核心的概念**
 
 在终端输入 `ls -Z `（查看文件的安全上下文）
-
 
 其中这个**unconfined_u:object_r:user_home_t:s0**就是安全上下文
 
@@ -406,9 +404,6 @@ MAC 主要控制直接访问，但防不住侧信道攻击，例如黑客无法�
 > - 实际配置，它在哪里？如何查看？如何配置？如何排错？
 > - 安全研究，它能防御什么？有什么弱点？配置错误会造成什么后果？攻击者可能如何利用？
 >
-> 成为一位优秀的网络安全从业者，这条路必定不会太顺利，要深入人心的知识太多了，能不能熬住这份孤独，能不能沉下心来，都是未知数
->
-> 我希望你能乐在其中，用这些知识去创造属于自己的life time
 
 
 
@@ -447,6 +442,8 @@ ls命令的作用就是列出目录下的内容，语法细节如下：
 ```
 ls [-a -l -h] [linux路径]
 ```
+
+当不使用选项和参数时，表现形式如下
 
 Q：直接输入ls命令，列出当前目录下的内容，当前目录是哪一个目录？
 
@@ -496,6 +493,7 @@ A：这是因为你的 CentOS 终端设置了**颜色别名（Color Aliases）**
 语法中的选项是可以组合使用的，比如-a和-l可以组合
 
 
+
 ##### ls -h命令
 
 - 以易于阅读的形式，列出文件的大小，如K，M，G
@@ -504,5 +502,283 @@ A：这是因为你的 CentOS 终端设置了**颜色别名（Color Aliases）**
 - 必须要搭配 -a ，-l 来使用
 
 
+### 1.3   vi和vim编辑器
 
+vi和vim的基本介绍：
+
+Linux 系统会内置 vi 文本编辑器
+
+Vim 具有程序编辑的能力，可以看做是 Vi 的增强版本，可以主动的以字体颜色辨别语法的正确性，方便程序设计。代码补全、编译及错误跳转等方便编程的功能特别丰富，在程序员中被广泛使用。
+
+**vi和vim常用的三种模式**
+
+- 正常模式
+
+以 vim 打开一个档案就直接进入一般模式了(这是默认的模式)，在这个模式中，你可以使用『上下左右』按键来移动光标，你可以使用『删除字符』或『删除整行』来处理档案内容，也可以使用『复制、粘贴』来处理你的文件数据
+
+- 插入模式
+
+按下 i, I, o, O, a, A, r, R 等任何一个字母之后才会进入编辑模式，一般来说按 i 即可
+
+- 命令行模式
+
+在这个模式当中，可以提供你相关指令，完成读取、存盘、替换、离开 vim 、显示行号等的动作，则是在此模式中达成的！
+
+实际案例：
+
+用vim编写一个hello.java文件
+
+```
+vim Hello.java
+```
+
+进入vim编辑器后输入`i`进入插入模式编写代码
+
+```
+public class Hello {
+
+    public static void main(String[] args) {
+
+        System.out.println("hello,world~");
+
+    }
+
+}
+```
+
+按下esc，打一个`:`，输入wq，这个文件就创建好了
+
+**命令行模式的常见操作**
+
+|   命令    |            功能            |
+| :-------: | :------------------------: |
+|    :w     |          保存文件          |
+|    :q     |          退出vim           |
+|    :wq    |         保存并退出         |
+|    :q!    | 放弃当前未保存的修改并退出 |
+|  :set nu  |          显示行号          |
+| :set nonu |          关闭行号          |
+
+### 1.4   开机、重启和用户登录注销
+
+**关机&重启命令**
+
+shutdown -h now			立该进行关机
+
+shutdown -h 1			"hello, 1分钟后会关机了"
+
+shutdown -r now			现在重新启动计算机
+
+halt						关机，作用和上面一样
+
+reboot					现在重新启动计算机
+
+sync					把内存的数据同步到磁盘
+
+**注意细节**
+
+不管是重启系统还是关闭系统，首先要运行sync命令，把内存中的数据写到磁盘中
+
+## 第二章   用户管理
+
+Linux系统是一个多用户多任务的操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统
+
+### 2.1   添加用户
+
+基本语法：
+
+```
+useradd 用户名
+```
+
+应用案例：
+
+添加一个用户 milan（默认该用户的家目录在 /home/milan）
+
+```
+useradd milan
+```
+
+当创建用户成功后，会自动的创建和用户同名的家目录
+
+```
+#输入useradd milan后
+
+[root@localhost home]# useradd milan
+[root@localhost home]# ls
+johnwang  milan
+```
+
+也可以通过 `useradd -d 指定目录 新的用户名`，给新创建的用户指定家目录
+
+```
+useradd -d /home/test wangder
+```
+
+> 我在输入这行代码后，依旧先用`cd /home/test`，进入test文件夹，然后我输入`ls`指令，却没有发现`wangder`文件夹，我很疑惑这是为什么？
+>
+> 后来我才发现，`/home/test`是我强行指定的家目录，系统不会额外再给我创建一个叫`wangder`的目录
+
+### 2.2   指定/修改密码
+
+基本语法：
+
+```
+passwd 用户名
+```
+
+应用案例：
+
+给milan 指定密码
+
+```
+#终端环境下
+
+[root@localhost home]# passwd milan
+Changing password for user milan.
+New password: 
+Retype new password: 
+passwd: all authentication tokens updated successfully.
+```
+
+使用milan登录账户后
+
+```
+[milan@localhost ~]$ ls
+[milan@localhost ~]$ pwd
+/home/milan
+```
+
+> `ls`指令下，看不到任何文件目录或者文件（除了隐藏文件）
+>
+> `pwd`指令意为**显示当前用户所在的目录（高频）**
+
+### 2.3   删除用户
+
+基本语法：
+
+```
+userdel 用户名
+```
+
+应用案例：
+
+- 删除用户milan，但是要保留家目录
+
+```
+[root@localhost ~]# ls /home
+johnwang  milan  test
+[root@localhost ~]# userdel milan		#删除执行语句
+[root@localhost ~]# ls /home
+johnwang  milan  test
+```
+
+- 删除用户以及用户主目录，比如wangder
+
+```
+[root@localhost home]# ls
+johnwang  milan  test
+[root@localhost home]# userdel -r wangder		#删除执行语句
+[root@localhost home]# ls
+johnwang  milan
+```
+
+细节说明：
+
+一般情况下，我们建议保留家目录，只删除账户，避免该账户所在的家目录里重要的文件资源被删掉，影响正常业务
+
+### 2.4   查询用户信息
+
+#### 2.4.1   查询用户信息指令
+
+基本语法：
+
+```
+id 用户名
+```
+
+应用实例：
+
+查询root信息
+
+```
+[root@localhost home]# id root
+uid=0(root) gid=0(root) groups=0(root)
+```
+
+细节说明：
+
+当用户不存在时，返回无此用户
+
+```
+[root@localhost home]# id milan
+id: milan: no such user
+```
+
+#### 2.4.2   切换用户
+
+介绍：
+
+在操作Linux中，如果当前用户的权限不够，可以通过 `su -` 指令，切换到高权限用户，比如root
+
+基本语法：
+
+```
+su - 切换用户名
+```
+
+实际案例：
+
+```
+[root@localhost home]# su - johnwang
+Last login: Sun Nov 15 23:34:13 PST 2026 from 192.168.229.1 on pts/1
+[johnwang@localhost ~]$ 
+```
+
+创建一个用户jack，指定密码，然后切换到 jack
+
+```
+[root@localhost home]# ls
+jack  johnwang  milan
+[root@localhost home]# passwd jack
+Changing password for user jack.
+New password: 
+Retype new password: 
+passwd: all authentication tokens updated successfully.
+[root@localhost home]# su - jack
+Last login: Sun Nov 15 23:51:44 PST 2026 on pts/1
+[jack@localhost ~]$ su -
+Password: 
+Last login: Sun Nov 15 23:52:07 PST 2026 on pts/1
+[root@localhost ~]# 
+```
+
+细节说明：
+
+- 从权限高的用户切换到权限低的用户，不需要输入密码，反之需要
+
+
+- 当需要返回到原来用户时，使用`exit`或者`logout`指令
+
+#### 2.4.3   查看当前用户/登录用户信息
+
+基本语法：
+
+```
+whoami				#现在的你拥有什么权限？（当前有效用户）		
+
+who am I			#你最初是谁连进来的？（原始登录用户）
+```
+
+实际示例：
+
+```
+[root@localhost ~]# whoami
+root
+
+[root@localhost ~]# who am i
+johnwang pts/1        2026-11-15 23:34 (192.168.229.1)
+```
+
+### 2.5   用户组
 
