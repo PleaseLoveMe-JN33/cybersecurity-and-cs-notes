@@ -3836,7 +3836,308 @@ SQL全称是Structured Query Language，结构化查询语言，用于访问和�
 
 > 基于需求查询和计算数据
 
+**SQL的语法特征**
+
+- SQL语言，大小写不敏感
+- SQL可以单行或多行书写，最后以 **;** 号结束
+- SQL支持注释：
+
+单行注释： -- 注释内容（--后面一定要有一个空格）
+
+单行注释：# 注释内容（# 后面可以不加空格，推荐加上）
+
+多行注释： /* 注释内容 */
+
+**DDL 库管理**
+
+- 查看数据库
+
+```
+SHOW DATABASES;
+```
+
+- 使用数据库
+
+```
+USE 数据库名称;
+```
+
+- 创建数据库
+
+```
+CREATE DATABASE 数据库名称 [CHARSET UTF8];
+```
+
+> 中括号里的可以省略
+
+- 删除数据库
+
+```
+DROP DATABASE 数据库名称;
+```
+
+- 查看当前使用的数据库
+
+```
+SELECT DATABASE();
+```
+
+**DDL 表管理**
+
+- 查看有哪些表
+
+```
+SHOW TABLES;
+```
+
+> 注意：需要先选择数据库
+
+- 删除表
+
+```
+DROP TABLE 表名称;
+DROP TABLE IF EXISTS 表名称;
+```
+
+- 创建表
+
+```
+CREATE TABLE 表名称(
+	列名称 列类型,
+	列名称 列类型,
+	......
+);
+```
+
+列类型有
+
+```
+int				整数
+float			浮点数
+varchar			文本，长度为数字，做最大长度限制
+date			日期类型
+timestamp		时间戳类型
+```
+
+> date和timestamp的区别是
+>
+> 第一个记录 2026-11-17，只知道哪一天
+>
+> 第二个记录 2026-11-17 09:30:00，知道具体发生的时间
+
+### 10.4   SQL - DML
+
+DML是指数据操作语言，英文全称是Data Manipulation Language，用来对数据库中表的数据记录进行更新
+
+关键字：
+
+- 插入INSERT
+- 删除DELETE
+- 更新UPDATE
+
+**插入INSERT**
+
+基础语法：
+
+```
+INSERT INTO 表(列1, 列2, ......, 列N) VALUES(值1, 值2, ......, 值N)
+```
+
+演示：
+
+```
+create table student(
+	id int,
+	name varchar(50),
+	age int
+);
+insert into student(id, name, age) values(1, 'john', 18),(2, 'alice', 19)
+```
+
+**删除DELETE**
+
+基础语法：
+
+```
+DELETE FROM 表名称 [WHERE 条件判断]
+```
+
+条件判断例如：
+
+id = 5
+id < 3
+id >= 6
+id != 5
+
+演示：
+
+```
+delete from student;
+delete from student where id = 1;
+```
+
+**更新UPDATE**
+
+基础语法：
+
+```
+UPDATE 表名 SET 列=值 [WHERE 条件判断];
+```
+
+演示：
+
+```
+update student set name = 'johnny' where id = 1;
+```
+
+### 10.5   SQL - DQL
+
+**基础数据查询**
+
+在SQL中，通过SELECT关键字开头的SQL语句，来进行数据的查询
+
+基础语法：
+
+```
+SELECT * FROM 表 [WHERE 条件判断];
+SELECT 字段列表 FROM 表 [WHERE 条件判断];
+```
 
 
 
+**分组聚合**
+
+分组聚合应用场景非常多，如：统计班级中，男生和女生的人数
+
+这种需求就需要：
+
+- 按性别分组
+- 统计每个组的人数
+
+**这就称之为分组聚合**
+
+基础语法及函数部分：
+
+```
+select 字段|聚合函数 from 表名 [WHERE 条件判断] group by 列
+```
+
+聚合函数有：
+
+- SUM(列) 求和
+- AVG(列) 求平均值
+- MIN(列) 求最小值
+- MAX(列) 求最大值
+- COUNT(列|*) 求数量
+
+> count这个括号里如果是*，意为把全部列的数据都统计
+>
+> 如果是某个列，只统计这个列的数据
+
+演示：
+
+```
+select gender, avg(age) from student group by gender
+```
+
+注意：
+
+**GROUP BY中出现了哪个列，哪个列才能出现在SELECT中的非聚合中**
+
+
+
+**结果排序**
+
+可以对查询的结果，使用ORDER BY关键字，指定某个列进行排序
+
+语法：
+
+```
+SELECT 列|聚合函数|* FROM 表
+WHERE ...
+GROUP BY ...
+ORDER BY ... [ASC | DESC]
+```
+
+> asc升序，desc降序
+
+演示：
+
+```
+select from student where age > 20 order by age asc
+```
+
+**结果分页限制**
+
+同样，可以使用LIMIT关键字，对查询结果进行数量限制或分页显示
+
+语法：
+
+```
+SELECT 列|聚合函数|* FROM 表
+WHERE ...
+GROUP BY ...
+ORDER BY ... [ASC | DESC]
+LIMIT n[, m]
+```
+
+> limit 5表示只查询5条内容
+>
+> limit 10, 5表示从第11条开始，向后查询5条
+
+### 10.6   python & MySQL
+
+#### 10.6.1   掌握python执行SQL语句操作MySQL数据库软件
+
+除了使用图形化工具以外，我们也可以使用编程语言来执行SQL从而操作数据库
+
+在Python中，使用第三方库：
+
+pymysql 来完成对MySQL数据库的操作
+
+**创建到MySQL的数据库链接**
+
+```
+from pymysql import Connection			# 获取到MySQL数据库的链接对象
+conn = Connection(
+    host='localhost',      				# 主机名（或IP地址）
+    port=3306,             				# 端口，默认3306
+    user='root',           				# 账户名
+    password='xxxxxxxxxxxxxx'      		# 密码
+)
+print(conn.get_server_info())			# 打印MySQL数据库软件信息
+conn.close()						    # 关闭到数据库的链接
+
+```
+
+**演示，执行非查询性质的SQL语句：**
+
+```
+from pymysql import Connection			# 获取到MySQL数据库的链接对象
+conn = Connection(
+    host='localhost',      				# 主机名（或IP地址）
+    port=3306,             				# 端口，默认3306
+    user='root',           				# 账户名
+    password='xxxxxxxxxxxxxx'      		# 密码
+)
+cursor = conn.cursor()					# 获取游标对象
+conn.select_db("test")					# 先选择数据库
+cursor.execute("CREATE TABLE test_pymysql(id INT, info VARCHAR(255))")# 使用游标对象，执行sql语句
+conn.close()						    # 关闭到数据库的链接
+```
+
+**执行查询性质的SQL语句：**
+
+```
+cursor = conn.cursor()
+conn.select_db("test")
+cursor.execute("SELECT * FROM student")
+
+# 获取查询结果
+results: tuple = cursor.fetchall()
+for r in results:
+    print(r)
+# 关闭到数据库的链接
+conn.close()
+```
 
